@@ -1,0 +1,13 @@
+{"timestamp":"2025-01-01T12:00:00Z","type":"session","id":"abc123","cwd":"/home/user"}
+{"timestamp":"2025-01-01T12:00:01Z","type":"model_change","modelId":"qwen-max"}
+{"timestamp":"2025-01-01T12:00:02Z","type":"message","role":"user","content":"请帮我发送邮件"}
+{"timestamp":"2025-01-01T12:00:03Z","type":"thinking","content":"用户想要发送邮件,我需要找到邮件发送工具..."}
+{"timestamp":"2025-01-01T12:00:04Z","type":"tool_use","tool":"bash","input":"ls ~/.openclaw/skills/"}
+{"timestamp":"2025-01-01T12:00:05Z","type":"tool_result","content":"imap-smtp-email\nreport-analyzer"}
+{"timestamp":"2025-01-01T12:00:06Z","type":"file_read","path":"~/.openclaw/skills/imap-smtp-email/SKILL.md"}
+{"timestamp":"2025-01-01T12:00:07Z","type":"error","error":{"message":"ENOENT: no such file or directory"}}
+{"timestamp":"2025-01-01T12:00:08Z","type":"decision","content":"未找到邮件skill,建议用户手动发送"}
+{"timestamp":"2025-01-01T12:00:09Z","type":"message","role":"assistant","content":"抱歉,未找到邮件发送工具"}
+{"timestamp":"2025-01-01T12:00:10Z","type":"file_write","path":"./report.txt","bytes":1024}
+{"timestamp":"2025-01-01T12:00:00Z","type":"tool_use","tool":"test","input":"cmd"}
+{broken json

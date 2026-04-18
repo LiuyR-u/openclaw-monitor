@@ -1,0 +1,16 @@
+{
+  "defaultAgent": "main",
+  "defaultLang": "zh",
+  "defaultMaxLen": 200,
+  "pollInterval": 500,
+  "showTimestamp": true,
+  "showEmoji": true,
+  "autoScroll": true,
+  "filters": {
+    "default": null,
+    "compact": ["message", "error"],
+    "tools": ["tool_use", "tool_result", "toolCall", "toolResult"],
+    "errors": ["error"]
+  },
+  "openclawPath": "~/.openclaw"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "openclaw-monitor",
+  "version": "1.0.0",
+  "description": "Monitor openclaw agent activities in real-time",
+  "main": "monitor.js",
+  "scripts": {
+    "start": "node monitor.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "openclaw",
+    "monitor",
+    "log",
+    "tail"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
