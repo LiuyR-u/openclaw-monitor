@@ -314,10 +314,13 @@ function truncate(str, maxLen = 200) {
  * @param {string} options.lang - Language (zh/en)
  * @param {number} options.maxLen - Max content length
  * @param {string[]} options.filter - Event types to show (null = all)
+ * @param {Date} options.since - Start time filter
+ * @param {Date} options.until - End time filter
+ * @param {string} options.search - Search pattern
  * @returns {object|null} Parsed event or null if invalid
  */
 function parseLine(line, options = {}) {
-  const { lang = 'zh', maxLen = 200, filter = null } = options;
+  const { lang = 'zh', maxLen = 200, filter = null, since = null, until = null, search = null } = options;
 
   // Skip empty lines
   if (!line || line.trim() === '') {
@@ -352,6 +355,15 @@ function parseLine(line, options = {}) {
 
   // Format time as HH:MM:SS
   const time = new Date(timestamp);
+  
+  // Apply time filter
+  if (since && time < since) {
+    return null;
+  }
+  if (until && time > until) {
+    return null;
+  }
+  
   const timeStr = time.toTimeString().substring(0, 8);
 
   // Get event config
@@ -365,6 +377,18 @@ function parseLine(line, options = {}) {
 
   // Generate description
   const description = config.template(data, lang);
+
+  // Apply search filter
+  if (search) {
+    const searchLower = search.toLowerCase();
+    const matchInType = eventType.toLowerCase().includes(searchLower);
+    const matchInDesc = description.toLowerCase().includes(searchLower);
+    const matchInRaw = JSON.stringify(data).toLowerCase().includes(searchLower);
+    
+    if (!matchInType && !matchInDesc && !matchInRaw) {
+      return null;
+    }
+  }
 
   return {
     type: eventType,

@@ -41,7 +41,11 @@ function parseArgs() {
     noColor: false,
     stats: false,
     latest: false,
-    agent: config.defaultAgent || 'main'
+    agent: config.defaultAgent || 'main',
+    since: null,
+    until: null,
+    last: null,
+    search: null
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -69,10 +73,23 @@ function parseArgs() {
       options.latest = true;
     } else if (arg === '--agent' && i + 1 < args.length) {
       options.agent = args[++i];
+    } else if (arg === '--since' && i + 1 < args.length) {
+      options.since = parseTimeArg(args[++i]);
+    } else if (arg === '--until' && i + 1 < args.length) {
+      options.until = parseTimeArg(args[++i]);
+    } else if (arg === '--last' && i + 1 < args.length) {
+      options.last = parseLastArg(args[++i]);
+    } else if (arg === '--search' && i + 1 < args.length) {
+      options.search = args[++i];
     } else if (!arg.startsWith('--') && !options.logFile) {
       // First positional argument is log file
       options.logFile = arg;
     }
+  }
+
+  // Handle --last flag
+  if (options.last) {
+    options.since = new Date(Date.now() - options.last);
   }
 
   // Handle --latest flag
@@ -98,6 +115,37 @@ function parseArgs() {
   }
 
   return options;
+}
+
+// Parse time argument (e.g., "15:00", "2026-04-18 15:00")
+function parseTimeArg(timeStr) {
+  // If only time (HH:MM), use today's date
+  if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
+    const today = new Date();
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    today.setHours(hours, minutes, 0, 0);
+    return today;
+  }
+  // Otherwise parse as full datetime
+  return new Date(timeStr);
+}
+
+// Parse --last argument (e.g., "1h", "30m", "2d")
+function parseLastArg(lastStr) {
+  const match = lastStr.match(/^(\d+)([hmd])$/);
+  if (!match) {
+    console.error('错误: --last 格式应为 <number><h|m|d>, 例如: 1h, 30m, 2d');
+    process.exit(1);
+  }
+  
+  const value = parseInt(match[1]);
+  const unit = match[2];
+  
+  switch (unit) {
+    case 'h': return value * 60 * 60 * 1000;
+    case 'm': return value * 60 * 1000;
+    case 'd': return value * 24 * 60 * 60 * 1000;
+  }
 }
 
 // Graceful exit handler
